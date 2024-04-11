@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>websocket的基本使用</title>
+  </head>
+  <body>
+    <!-- 输入内容 -->
+    <input type="text" id="inputSocket" placeholder="输入你的内容" />
+    <!-- 发送请求按钮 -->
+    <button id="btnSend">发送请求</button><br />
+    <!-- 显示请求结果 -->
+    <textarea
+      id="textarea"
+      style="margin-top: 10px; width: 200px; height: 100px"
+      type="text"
+    ></textarea>
+    <script>
+      //h5直接提供了websocket的api,我们可以直接去使用
+      var socket = new WebSocket("ws://localhost:8080");
+      // 监听socket连接
+      socket.addEventListener("open", (event) => {
+        console.log("socket连接成功");
+        socket.send("Hello,Server!");
+      });
+      // 发送信息给服务器
+      const btnSend = document.querySelector("#btnSend");
+      btnSend.addEventListener("click", () => {
+        const inputSocket = document.querySelector("#inputSocket");
+        const content = inputSocket.value;
+        socket.send(content);
+      });
+      // 接受服务端发来的数据
+      socket.addEventListener("message", (event) => {
+        console.log("接收服务端数据", event.data);
+        const textarea = document.querySelector("#textarea");
+        textarea.value = event.data;
+      });
+
+      // 关闭socket连接
+      socket.addEventListener("close", () => {
+        const textarea = document.querySelector("#textarea");
+        textarea.value = "socket服务断开连接";
+      });
+    </script>
+  </body>
+</html>

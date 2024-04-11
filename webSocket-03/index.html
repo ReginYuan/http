@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>基础聊天室</title>
+  </head>
+  <body>
+    <!-- 输入内容 -->
+    <input type="text" id="inputSocket" placeholder="输入你的内容" />
+    <!-- 发送请求按钮 -->
+    <button id="btnSend">发送请求</button><br />
+    <!-- 显示请求结果 -->
+    <ul id="ul" style="margin-top: 10px; width: auto; height: 100px"></ul>
+    <script>
+      // 创建websocket对象
+      // 注意：在h5直接提供了websocket的api,我们可以直接去使用
+      var socket = new WebSocket("ws://localhost:8080");
+      // 定义消息类型
+      const TYPE_ENTER = 0; //用户进入聊天室的消息
+      const TYPE_LEAVE = 1; //用户离开聊天室的消息
+      const TYPE_MSG = 2; //用户正常聊天消息
+      // 监听socket连接
+      socket.addEventListener("open", (event) => {
+        console.log("socket连接成功");
+      });
+
+      // 发送信息给服务器
+      const btnSend = document.querySelector("#btnSend");
+      btnSend.addEventListener("click", () => {
+        const inputSocket = document.querySelector("#inputSocket");
+        const content = inputSocket.value;
+        socket.send(content);
+        inputSocket.value = "";
+      });
+
+      // 接受服务端发来的数据
+      socket.addEventListener("message", (event) => {
+        console.log("接收服务端数据", event.data);
+        var data = JSON.parse(event.data);
+        const ul = document.querySelector("#ul");
+        const li = document.createElement("li");
+        li.innerHTML += `${data.msg + "--" + data.time} ` + `<br />`;
+        console.log(data.type);
+        if (data.type === TYPE_ENTER) {
+          li.style.color = "green";
+        } else if (data.type === TYPE_MSG) {
+          li.style.color = "blue";
+        } else if (data.type === TYPE_LEAVE) {
+          li.style.color = "red";
+        }
+        ul.appendChild(li);
+      });
+
+      // 关闭socket连接
+      socket.addEventListener("close", () => {
+        const ul = document.querySelector("#ul");
+        ul.value = "socket服务断开连接";
+      });
+    </script>
+  </body>
+</html>

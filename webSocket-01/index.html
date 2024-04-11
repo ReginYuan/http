@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>websocket</title>
+  </head>
+  <body>
+    <script>
+      // 创建webSocket连接，连接webSocket服务器
+      const socket = new WebSocket("ws://127.0.0.1:8080");
+
+      // 连接已开启
+      socket.addEventListener("open", (event) => {
+        //向服务器发送消息
+        socket.send("Hello Server!");
+      });
+
+      // 接收服务器的消息
+      socket.addEventListener("message", (event) => {
+        //服务器发来的消息
+        console.log("服务器发来的消息", event.data);
+      });
+    </script>
+  </body>
+</html>

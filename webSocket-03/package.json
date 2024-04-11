@@ -1,5 +1,5 @@
 {
-  "name": "webSocket-01",
+  "name": "webSocket-03",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,6 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ws": "^8.16.0"
+    "nodejs-websocket": "^1.7.2"
   }
 }
